@@ -48,17 +48,13 @@ broker.on('ready', function () {
     console.log('mqtt client connected and waiting for messages')
 
     client.subscribe('lima', function (error) {
-      if (!error) {
-        // just a test, it's temporary
-        client.publish('lima', 'hello mqtt')
-      }
+      console.log(error)
     })
 
   })
 
   client.on('message', function (topic, message) {
-    console.log(message.toString())
-    client.end()
+    // must implement route to get messages from ESP8266 and store them in MongoDB
   })
 
 })
