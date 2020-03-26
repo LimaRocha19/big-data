@@ -21,12 +21,14 @@ app.use(body_parser.json())
 var mongoose = require('mongoose')
 var config = {
   secret: '639dded6-ba18-4647-83d6-9b0c7cf75c2d' // random uuid
-  , database: 'mongodb://somewhere_over_the_rainbow' // must define it yet
+  , database: 'mongodb+srv://lima:st10900152@big-data-6zng5.gcp.mongodb.net/test?retryWrites=true&w=majority' // must define it yet
 }
 mongoose.Promise = global.Promise
 console.log('Initiating...')
 console.log('Dabase:', config.database)
-// mongoose.connect(config.database) // must define database yet
+mongoose.connect(config.database, {
+  useNewUrlParser: true
+}) // MongoDB cloud
 app.set('secret', config.secret)
 
 // mark - mqtt
@@ -54,7 +56,33 @@ broker.on('ready', function () {
   })
 
   client.on('message', function (topic, message) {
-    // must implement route to get messages from ESP8266 and store them in MongoDB
+
+    // mark - parsing message as JSON (only format accepted)
+
+    try {
+      let data = JSON.parse(message.toString())
+
+      // mark - save in database
+
+      var Log = require('./models/log')
+      var log = new Log({
+        watts: data.watts
+        , phase: data.phase
+        , created: new Date()
+      })
+      log.save(function (error) {
+        if (!error) {
+          console.log('test log created with some watts')
+        } else {
+          console.log(error.message)
+        }
+      })
+
+    } catch (error) {
+      console.log('parsing message failed, it is not in JSON format')
+      console.log(error)
+    }
+
   })
 
 })
@@ -73,6 +101,28 @@ app.get('/', function (rec, res) {
 
 })
 
+app.post('/publish', function (req, res) {
+
+  var data = req.body
+
+  console.log(req)
+
+  var client = mqtt.connect('mqtt://localhost')
+
+  if (data.message) {
+    client.publish('lima', data.message)
+    res.status(200).json({
+      success: true
+      , message: 'Data published with success'
+    })
+  } else {
+    res.status(500).json({
+      success: false
+      , message: 'No data sent to be published'
+    })
+  }
+
+})
 
 http.listen(port)
 
