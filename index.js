@@ -6,6 +6,8 @@ var port = process.env.PORT || 5000
 
 var uuid = require('uuid')
 
+var mqtt = require('mqtt')
+
 // mark - body-parser
 
 var body_parser = require('body-parser')
@@ -27,6 +29,40 @@ console.log('Dabase:', config.database)
 // mongoose.connect(config.database) // must define database yet
 app.set('secret', config.secret)
 
+// mark - mqtt
+
+var broker = require('./mqtt/broker')
+broker.on('ready', function () {
+
+  console.log('mosca working')
+
+  // mark - client connection!
+
+  var client = mqtt.connect('mqtt://localhost')
+  console.log('mqtt client online')
+
+  // mark - waiting for messages
+
+  client.on('connect', function () {
+
+    console.log('mqtt client connected and waiting for messages')
+
+    client.subscribe('lima', function (error) {
+      if (!error) {
+        // just a test, it's temporary
+        client.publish('lima', 'hello mqtt')
+      }
+    })
+
+  })
+
+  client.on('message', function (topic, message) {
+    console.log(message.toString())
+    client.end()
+  })
+
+})
+
 // mark - welcome message (console and API)
 
 let welcome = {
@@ -40,6 +76,7 @@ app.get('/', function (rec, res) {
   res.status(200).json(welcome)
 
 })
+
 
 http.listen(port)
 
