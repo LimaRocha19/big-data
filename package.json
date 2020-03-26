@@ -1,0 +1,31 @@
+{
+  "name": "big-data",
+  "version": "1.0.0",
+  "description": "Main API and MQTT broker for monitoring of my house's energy consumption",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Isaías Lima",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "http": "0.0.1-security",
+    "https": "^1.0.0",
+    "merge": "^1.2.1",
+    "mkdirp": "^1.0.3",
+    "mocha": "^7.1.1",
+    "moment": "^2.24.0",
+    "mongodb": "^3.5.5",
+    "mongodb-core": "^3.2.7",
+    "mongoose": "^5.9.6",
+    "morgan": "^1.10.0",
+    "mqtt": "^3.0.0",
+    "multer": "^1.4.2",
+    "path": "^0.12.7",
+    "pug": "^2.0.4",
+    "request": "^2.88.2",
+    "uuid": "^7.0.2"
+  }
+}
