@@ -21,7 +21,7 @@ app.use(body_parser.json())
 var mongoose = require('mongoose')
 var config = {
   secret: '639dded6-ba18-4647-83d6-9b0c7cf75c2d' // random uuid
-  , database: 'mongodb+srv://lima:st10900152@big-data-6zng5.gcp.mongodb.net/test?retryWrites=true&w=majority' // must define it yet
+  , database: 'mongodb://127.0.0.1:27017' // must define it yet
 }
 mongoose.Promise = global.Promise
 console.log('Initiating...')
@@ -80,7 +80,7 @@ broker.on('ready', function () {
 
     } catch (error) {
       console.log('parsing message failed, it is not in JSON format')
-      console.log(error)
+      console.log(message.toString())
     }
 
   })
