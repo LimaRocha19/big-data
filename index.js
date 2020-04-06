@@ -40,7 +40,7 @@ broker.on('ready', function () {
 
   // mark - client connection!
 
-  var client = mqtt.connect('mqtt://localhost')
+  var client = mqtt.connect('mqtt://limas-data.herokuapp.com')
   console.log('mqtt client online')
 
   // mark - waiting for messages
