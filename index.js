@@ -33,57 +33,50 @@ app.set('secret', config.secret)
 
 // mark - mqtt
 
-var broker = require('./mqtt/broker')
-broker.on('ready', function () {
+var broker = 'mqtt://test.mosquitto.org:1883'
 
-  console.log('mosca working')
+var client = mqtt.connect(broker)
+console.log('mqtt client online')
 
-  // mark - client connection!
+// mark - waiting for messages
 
-  var client = mqtt.connect('mqtt://limas-data.herokuapp.com')
-  console.log('mqtt client online')
+client.on('connect', function () {
 
-  // mark - waiting for messages
+  console.log('mqtt client connected and waiting for messages')
 
-  client.on('connect', function () {
+  client.subscribe('lima', function (error) {
+    console.log(error)
+  })
 
-    console.log('mqtt client connected and waiting for messages')
+})
 
-    client.subscribe('lima', function (error) {
-      console.log(error)
+client.on('message', function (topic, message) {
+
+  // mark - parsing message as JSON (only format accepted)
+
+  try {
+    let data = JSON.parse(message.toString())
+
+    // mark - save in database
+
+    var Log = require('./models/log')
+    var log = new Log({
+      watts: data.watts
+      , phase: data.phase
+      , created: new Date()
+    })
+    log.save(function (error) {
+      if (!error) {
+        console.log('test log created with some watts')
+      } else {
+        console.log(error.message)
+      }
     })
 
-  })
-
-  client.on('message', function (topic, message) {
-
-    // mark - parsing message as JSON (only format accepted)
-
-    try {
-      let data = JSON.parse(message.toString())
-
-      // mark - save in database
-
-      var Log = require('./models/log')
-      var log = new Log({
-        watts: data.watts
-        , phase: data.phase
-        , created: new Date()
-      })
-      log.save(function (error) {
-        if (!error) {
-          console.log('test log created with some watts')
-        } else {
-          console.log(error.message)
-        }
-      })
-
-    } catch (error) {
-      console.log('parsing message failed, it is not in JSON format')
-      console.log(message.toString())
-    }
-
-  })
+  } catch (error) {
+    console.log('parsing message failed, it is not in JSON format')
+    console.log(message.toString())
+  }
 
 })
 
@@ -106,8 +99,6 @@ app.post('/publish', function (req, res) {
   var data = req.body
 
   console.log(req)
-
-  var client = mqtt.connect('mqtt://limas-data.herokuapp.com')
 
   if (data.message) {
     client.publish('lima', data.message)
