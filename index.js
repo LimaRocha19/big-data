@@ -21,7 +21,7 @@ app.use(body_parser.json())
 var mongoose = require('mongoose')
 var config = {
   secret: '639dded6-ba18-4647-83d6-9b0c7cf75c2d' // random uuid
-  , database: 'mongodb://127.0.0.1:27017' // must define it yet
+  , database: 'mongodb://lima:il71961178@ds137340.mlab.com:37340/heroku_40mr4r4p' // must define it yet
 }
 mongoose.Promise = global.Promise
 console.log('Initiating...')
