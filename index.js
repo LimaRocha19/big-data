@@ -107,7 +107,7 @@ app.post('/publish', function (req, res) {
 
   console.log(req)
 
-  var client = mqtt.connect('mqtt://localhost')
+  var client = mqtt.connect('mqtt://limas-data.herokuapp.com')
 
   if (data.message) {
     client.publish('lima', data.message)
