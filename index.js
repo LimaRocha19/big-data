@@ -21,62 +21,74 @@ app.use(body_parser.json())
 var mongoose = require('mongoose')
 var config = {
   secret: '639dded6-ba18-4647-83d6-9b0c7cf75c2d' // random uuid
-  , database: 'mongodb://lima:il71961178@ds137340.mlab.com:37340/heroku_40mr4r4p' // must define it yet
+  , database: 'mongodb+srv://lima:st10900152@cluster0-6zng5.gcp.mongodb.net/test?retryWrites=true&w=majority' // must define it yet
 }
 mongoose.Promise = global.Promise
 console.log('Initiating...')
 console.log('Dabase:', config.database)
 mongoose.connect(config.database, {
   useNewUrlParser: true
+  , dbName: 'test'
+}, function (error) {
+  console.log(error)
 }) // MongoDB cloud
 app.set('secret', config.secret)
 
 // mark - mqtt
 
-var broker = 'mqtt://test.mosquitto.org:1883'
+var broker = require('./mqtt/broker')
+let provider = 'mqtt://test.mosquitto.org'
+broker.on('ready', function () {
 
-var client = mqtt.connect(broker)
-console.log('mqtt client online')
+  console.log('mosca working')
 
-// mark - waiting for messages
+  // mark - client connection!
 
-client.on('connect', function () {
+  var client = mqtt.connect(provider)
+  console.log('mqtt client online')
 
-  console.log('mqtt client connected and waiting for messages')
+  // mark - waiting for messages
 
-  client.subscribe('lima', function (error) {
-    console.log(error)
+  client.on('connect', function () {
+
+    console.log('mqtt client connected and waiting for messages')
+
+    client.subscribe('lima', function (error) {
+      console.log(error)
+    })
   })
 
-})
+  client.on('message', function (topic, message) {
 
-client.on('message', function (topic, message) {
+    console.log(topic, message.toString())
 
-  // mark - parsing message as JSON (only format accepted)
+    // mark - parsing message as JSON (only format accepted)
 
-  try {
-    let data = JSON.parse(message.toString())
+    try {
+      let data = JSON.parse(message.toString())
 
-    // mark - save in database
+      // mark - save in database
 
-    var Log = require('./models/log')
-    var log = new Log({
-      watts: data.watts
-      , phase: data.phase
-      , created: new Date()
-    })
-    log.save(function (error) {
-      if (!error) {
-        console.log('test log created with some watts')
-      } else {
-        console.log(error.message)
-      }
-    })
+      var Log = require('./models/log')
+      var log = new Log({
+        watts: data.watts
+        , phase: data.phase
+        , created: new Date()
+      })
+      log.save(function (error) {
+        if (!error) {
+          console.log('test log created with some watts')
+        } else {
+          console.log(error.message)
+        }
+      })
 
-  } catch (error) {
-    console.log('parsing message failed, it is not in JSON format')
-    console.log(message.toString())
-  }
+    } catch (error) {
+      console.log('parsing message failed, it is not in JSON format')
+      console.log(message.toString())
+    }
+
+  })
 
 })
 
@@ -98,7 +110,7 @@ app.post('/publish', function (req, res) {
 
   var data = req.body
 
-  console.log(req)
+  var client = mqtt.connect(provider)
 
   if (data.message) {
     client.publish('lima', data.message)
