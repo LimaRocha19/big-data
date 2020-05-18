@@ -25,6 +25,11 @@ may_05 <- smoothed_data('2020-05-05', '2020-05-06', 0.3)
 may_06 <- smoothed_data('2020-05-06', '2020-05-07', 0.3)
 may_07 <- smoothed_data('2020-05-07', '2020-05-08', 0.3)
 may_08 <- smoothed_data('2020-05-08', '2020-05-09', 0.3)
+may_11 <- smoothed_data('2020-05-11', '2020-05-12', 0.3)
+may_12 <- smoothed_data('2020-05-12', '2020-05-13', 0.3)
+may_13 <- smoothed_data('2020-05-13', '2020-05-14', 0.3)
+may_14 <- smoothed_data('2020-05-14', '2020-05-15', 0.3)
+may_15 <- smoothed_data('2020-05-15', '2020-05-16', 0.3)
 
 # os dados dos últimos 5 dias serão implementados quando encerrarem as medições
 
@@ -43,22 +48,12 @@ may05 <- ggplot() + geom_line(data = may_05, mapping = aes(x = stamps, y = smoot
 may06 <- ggplot() + geom_line(data = may_06, mapping = aes(x = stamps, y = smoothed))
 may07 <- ggplot() + geom_line(data = may_07, mapping = aes(x = stamps, y = smoothed))
 may08 <- ggplot() + geom_line(data = may_08, mapping = aes(x = stamps, y = smoothed))
+may11 <- ggplot() + geom_line(data = may_11, mapping = aes(x = stamps, y = smoothed))
+may12 <- ggplot() + geom_line(data = may_12, mapping = aes(x = stamps, y = smoothed))
+may13 <- ggplot() + geom_line(data = may_13, mapping = aes(x = stamps, y = smoothed))
+may14 <- ggplot() + geom_line(data = may_14, mapping = aes(x = stamps, y = smoothed))
+may15 <- ggplot() + geom_line(data = may_15, mapping = aes(x = stamps, y = smoothed))
 
-# segunda-feira
-grid.arrange(apr20, apr27, may04) 
-
-# terça-feira
-grid.arrange(apr28, may05)
-
-# quarta-feira
-grid.arrange(apr22, apr29, may06)
-
-# quinta-feira
-grid.arrange(apr16, apr23, apr30, may07)
-
-# sexta-feira
-grid.arrange(apr17, apr24, may08)
-  
 # Sábados, domingos e feriados  
 
 april_18 <- smoothed_data('2020-04-18', '2020-04-19', 0.3)
@@ -82,15 +77,6 @@ may02 <- ggplot() + geom_line(data = may_02, mapping = aes(x = stamps, y = smoot
 may03 <- ggplot() + geom_line(data = may_03, mapping = aes(x = stamps, y = smoothed))
 may09 <- ggplot() + geom_line(data = may_09, mapping = aes(x = stamps, y = smoothed))
 may10 <- ggplot() + geom_line(data = may_10, mapping = aes(x = stamps, y = smoothed))
-
-# feriados
-grid.arrange(apr21, may01)
-
-# sábados
-grid.arrange(apr18, apr25, may02, may09)
-
-# domingos
-grid.arrange(apr19, apr26, may03, may10)
 
 # construção da tabela consolidada de padrões
 
@@ -119,6 +105,11 @@ m07 <- transpose(may_07)
 m08 <- transpose(may_08)
 m09 <- transpose(may_09)
 m10 <- transpose(may_10)
+m11 <- transpose(may_11)
+m12 <- transpose(may_12)
+m13 <- transpose(may_13)
+m14 <- transpose(may_14)
+m15 <- transpose(may_15)
 
 patterns <- rbind(a16,
                   a17,
@@ -144,7 +135,12 @@ patterns <- rbind(a16,
                   m07,
                   m08,
                   m09,
-                  m10)
+                  m10,
+                  m11,
+                  m12,
+                  m13,
+                  m14,
+                  m15)
 
 # adicionando as datas observadas
 
@@ -152,7 +148,8 @@ dates <- c('2020-04-16','2020-04-17','2020-04-18','2020-04-19','2020-04-20',
            '2020-04-21','2020-04-22','2020-04-23','2020-04-24','2020-04-25',
            '2020-04-26','2020-04-27','2020-04-28','2020-04-29','2020-04-30',
            '2020-05-01','2020-05-02','2020-05-03','2020-05-04','2020-05-05',
-           '2020-05-06','2020-05-07','2020-05-08','2020-05-09','2020-05-10')
+           '2020-05-06','2020-05-07','2020-05-08','2020-05-09','2020-05-10',
+           '2020-05-11','2020-05-12','2020-05-13','2020-05-14','2020-05-15')
 
 patterns <- cbind(patterns, dates)
 patterns <- as_tibble(patterns)
