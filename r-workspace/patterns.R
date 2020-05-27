@@ -154,7 +154,7 @@ dates <- c('2020-04-16','2020-04-17','2020-04-18','2020-04-19','2020-04-20',
 patterns <- cbind(patterns, dates)
 patterns <- as_tibble(patterns)
 
-write.csv(patterns, 'patterns.csv')
+write.csv(patterns, './patterns.csv')
 
 
 
