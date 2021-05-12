@@ -14,7 +14,7 @@
     "fs": "0.0.1-security",
     "http": "0.0.1-security",
     "https": "^1.0.0",
-    "merge": "^1.2.1",
+    "merge": "^2.1.1",
     "mkdirp": "^1.0.3",
     "mocha": "^7.1.1",
     "moment": "^2.24.0",
